@@ -1,0 +1,5 @@
+{
+  "name": "davisshaver/wp-parsely",
+  "description": "Composer wrapper for plugin",
+  "type": "wordpress-plugin"
+}
