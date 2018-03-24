@@ -619,11 +619,7 @@ class Parsely {
 		if ( is_archive() ) {
 			$parsely_page['@type'] = 'WebPage';
 			$parsely_page['url']   = $this->get_current_url();
-			if ( is_author() ) {
-				$parsely_page['headline'] = $this->get_clean_parsely_page_value( 'Author - ' . $author->data->display_name );
-			} else {
-				$parsely_page['headline'] = get_the_archive_title();
-			}
+
 		}
 
 		$parsely_page = apply_filters( 'after_set_parsely_page', $parsely_page, $post, $parsely_options );
