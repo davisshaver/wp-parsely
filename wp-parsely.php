@@ -1032,7 +1032,7 @@ class Parsely {
 			$page_url .= ':' . $port_number;
 		}
 		$page_url .= esc_html( wp_unslash( $_SERVER['REQUEST_URI'] ) );
-		return $page_url;
+		return apply_filters( 'wp_parsely_page_url', $page_url );
 	}
 
 	/* https://css-tricks.com/snippets/wordpress/get-the-first-image-from-a-post/ */
