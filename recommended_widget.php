@@ -86,6 +86,9 @@ class Parsely_Recommended_Widget extends WP_Widget {
 							}
 							?>
 							var postLink = jQuery('<a>').attr('href', value['url']).text(value['title']);
+							if (thumbnailImage) {
+								postLink.prepend(thumbnailImage);
+							}
 							widgetEntry.append(postLink);
 
 							<?php
