@@ -81,7 +81,7 @@ class Parsely_Recommended_Widget extends WP_Widget {
 							<?php
 							if ( in_array( 'display_thumbnail', $instance['display_options'], true ) ) {
 							?>
-							var thumbnailImage = jQuery('<img>').attr('src', value['thumb_url_medium']).appendTo(widgetEntry);
+							var thumbnailImage = jQuery('<img>').attr('src', value['image_url']).appendTo(widgetEntry);
 							<?php
 							}
 							?>
