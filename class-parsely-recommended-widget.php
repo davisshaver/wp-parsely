@@ -71,7 +71,7 @@ class Parsely_Recommended_Widget extends WP_Widget {
 					if (window.jQuery) {
 						method();
 					} else {
-						setTimeout(function() { defer(method) }, 50);
+						setTimeout(function() { defer(method); }, 50);
 					}
 				}
 
@@ -106,9 +106,9 @@ class Parsely_Recommended_Widget extends WP_Widget {
 					var outerDiv = jQuery('<div>').addClass('parsely-recommendation-widget').appendTo(parentDiv);
 					<?php
 					if ( in_array( 'display_thumbnail', $instance['display_options'], true ) ) {
-					?>
+						?>
 					outerDiv.addClass('display-thumbnail');
-					<?php
+						<?php
 					}
 					?>
 					var outerList = jQuery('<ul>').addClass('parsely-recommended-widget').appendTo(outerDiv);
@@ -134,12 +134,12 @@ class Parsely_Recommended_Widget extends WP_Widget {
 
 							<?php
 							if ( in_array( 'display_author', $instance['display_options'], true ) ) {
-							?>
+								?>
 							var authorDiv = jQuery('<div>').addClass('parsely-title-author-wrapper');
 							var authorLink = jQuery('<a>').attr('href', value['url']).text(value['author']);
 							authorDiv.append(authorLink);
 							widgetEntry.append(authorDiv);
-							<?php
+								<?php
 							}
 							?>
 
@@ -263,7 +263,7 @@ class Parsely_Recommended_Widget extends WP_Widget {
 					if ( in_array( 'display_author', $instance['display_options'], true ) ) {
 						echo 'selected="selected"';
 					};
-				?>
+					?>
 						value="display_author">Display Author</option>
 				<option
 					<?php
@@ -296,7 +296,7 @@ class Parsely_Recommended_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance                        = $old_instance;
-		$instance['title']               = trim( strip_tags( $new_instance['title'] ) );
+		$instance['title']               = trim( wp_strip_all_tags( $new_instance['title'] ) );
 		$instance['published_within']    = (int) trim( $new_instance['published_within'] );
 		$instance['return_limit']        = (int) $new_instance['return_limit'] <= 20 ? $new_instance['return_limit'] : '20';
 		$instance['sort']                = trim( $new_instance['sort'] );
