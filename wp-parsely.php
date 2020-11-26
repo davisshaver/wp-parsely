@@ -1716,6 +1716,7 @@ class Parsely {
 
 if ( class_exists( 'Parsely' ) ) {
 	define( 'PARSELY_VERSION', Parsely::VERSION );
+	global $parsely;
 	$parsely = new Parsely();
 }
 
