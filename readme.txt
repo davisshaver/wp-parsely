@@ -2,7 +2,7 @@
 Contributors: parsely_mike
 Tags: analytics, post, page
 Requires at least: 4.0
-Tested up to: 4.9
+Tested up to: 5.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -27,9 +27,9 @@ Feedback, suggestions, questions or concerns? E-mail us at [support@parsely.com]
 
 == Installation ==
 
-1. This plug-in requires an active version of Parse.ly. We offer a free trial, [sign up here](http://www.parsely.com/trial/?utm_medium=referral&utm_source=wordpress.org&utm_content=wp-parsely)
+1. This plug-in requires an active version of Parse.ly. You can contact hello@parsely.com for information on creating an account, or submit the form [here](https://www.parse.ly/start/).
 
-1. If you haven't already done so, [sign up for a trial of Parse.ly](http://www.parsely.com/trial/?utm_medium=referral&utm_source=wordpress.org&utm_content=wp-parsely)
+1. Ensure you have an active Parse.ly account
 1. Download the plugin
 1. Upload the entire `wp-parsely` folder to your `/wp-content/plugins` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress (look for "Parse.ly")
@@ -77,6 +77,30 @@ https://wordpress.org/plugins/fb-instant-articles/
 
 == Changelog ==
 
+= 2.2 =
+* adds page filter
+* prevents tracking of 404 pages leading to excess database queries
+
+= 2.1 =
+* adds metadata endpoint for headless WP installs
+
+= 2.0 =
+* Changes JavaScript integration to directly load tracker bundles that are customized for your specific site ID: https://www.parse.ly/help/integration/basic/. NOTE: Sites that have custom Parse.ly video tracking configured (outside of the Parse.ly WordPress plugin) for a player listed at https://www.parse.ly/help/integration/video_v2/#supported-players should contact support@parsely.com before upgrading.
+
+= 1.14 =
+* Updates AMP analytics implementation
+* Adds ability to use a horizontal layout of the widget (for page footers)
+* Adds itm campaign parameters to widget links for tracking performance
+* Adds option to use original or resized thumbnail in widget
+* Improves handling of missing taxonomy terms and other data
+* Improves post status check
+* Code cleanup to conform to WordPress VIP standards
+
+= 1.13 =
+* Makes AMP integration optional
+* Adds support for publisher logo information
+* Minor bugfixes
+
 = 1.12 =
 * Adds ability to use repeated meta tags instead of ld+json tags for metadata
 * Code cleanup to conform to WordPress VIP standards
@@ -86,7 +110,7 @@ https://wordpress.org/plugins/fb-instant-articles/
 * Adds ability to use Parsely API with widget
 * Adds ability to track or not track custom page and post types
 * Adds ability to disable Javascript tracking
-* <inor bugfixes
+* Minor bugfixes
 
 = 1.10 =
 * Adds ability to filter final JSON-LD output

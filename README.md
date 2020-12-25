@@ -40,7 +40,10 @@ Feedback, suggestions, questions or concerns? E-mail us at [support@parsely.com]
 1. Checkout the branch on which you've been working
 1. Navigate back up to the root of the `vccw` directory and run `vagrant up`
 1. Ssh into the Vagrant machine with `vagrant ssh`
+1. Delete extra wordpress files in /tmp with `rm -rf /tmp/wordpress*` (see this issue for context: https://github.com/wp-cli/wp-cli/issues/1938)
+1. Run the test init script, if you haven't already: `bash bin/install-wp-tests.sh wptest root <db password>`
 1. Navigate to `/var/www/wordpress/wp-content/plugins/wp-parsely` and run the test suite with the command `phpunit`
+
 
 ## Frequently Asked Questions ##
 
@@ -57,7 +60,12 @@ Dash code will only be placed on pages and posts which have been published in Wo
 You can use the `after_set_parsely_page` filter, which sends three arguments: the array of metadata, the post object, and the `parselyOptions` array:
 
 ```
-$parselyPage = apply_filters('after_set_parsely_page', $parselyPage, $post, $parselyOptions);
+function filter_parsely_page($parselyPage, $post, $parselyOptions ) {
+  $parselyPage['articleSection'] = ; // whatever values you want Parse.ly's Section to be
+  return $parselyPage;
+}
+
+add_filter( 'after_set_parsely_page', 'filter_parsely_page', 10, 3);
 ```
 
 This filter can go anywhere in your codebase, provided it always gets loaded. We recommend putting it in your header file, so that it gets loaded with wp_head.
@@ -88,6 +96,23 @@ See [the wiki](https://github.com/Parsely/wp-parsely/wiki/Setting-up-a-WP-plugin
 ![4. A sample `JSON-LD` meta tag for an article or post](https://raw.githubusercontent.com/Parsely/wp-parsely/master/json-ld-screenshot.png)
 
 ## Changelog ##
+
+### 2.0 ###
+* Changes JavaScript integration to directly load tracker bundles that are customized for your specific site ID: https://www.parse.ly/help/integration/basic/. NOTE: Sites that have custom Parse.ly video tracking configured (outside of the Parse.ly WordPress plugin) for a player listed at https://www.parse.ly/help/integration/video_v2/#supported-players should contact support@parsely.com before upgrading.
+
+### 1.14 ###
+* Updates AMP analytics implementation
+* Adds ability to use a horizontal layout of the widget (for page footers)
+* Adds itm campaign parameters to widget links for tracking performance
+* Adds option to use original or resized thumbnail in widget
+* Improves handling of missing taxonomy terms and other data
+* Improves post status check
+* Code cleanup to conform to WordPress VIP standards
+
+### 1.13 ###
+* Makes AMP integration optional
+* Adds support for publisher logo information
+* Minor bugfixes
 
 ### 1.12 ###
 * Adds ability to use repeated meta tags instead of ld+json tags for metadata
