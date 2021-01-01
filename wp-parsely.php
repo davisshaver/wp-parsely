@@ -1637,54 +1637,6 @@ class Parsely {
 		add_filter( 'amp_analytics_entries', array( $this, 'parsely_add_amp_native_analytics' ) );
 	}
 
-	public function parsely_add_amp_native_analytics( $analytics ) {
-		$options = $this->get_options();
-		if ( ! empty( $options['disable_amp'] ) && true === $options['disable_amp'] ) {
-			return;
-		}
-
-		if ( empty( $options['apikey'] ) ) {
-			return $analytics;
-		}
-
-		$analytics['parsely'] = array(
-			'type'       => 'parsely',
-			'attributes' => array(),
-			'config'     => wp_json_encode( array(
-				'vars' => array(
-					'apikey' => $options['apikey'],
-				),
-			) )
- 		);
- 		return $analytics;
- 	}
-
-	/**
-	 * Add amp analytics.
-	 *
-	 * @param type $analytics The analytics object you want to add.
-	 * @return type
-	 */
-	public function parsely_add_amp_analytics( $analytics ) {
-		$options = $this->get_options();
-
-		if ( empty( $options['apikey'] ) ) {
-			return $analytics;
-		}
-
-		$analytics['parsely'] = array(
-			'type'        => 'parsely',
-			'attributes'  => array(),
-			'config_data' => array(
-				'vars' => array(
-					'apikey' => $options['apikey'],
-				),
-			),
-		);
-
-		return $analytics;
-	}
-
 	/**
 	 * Add amp native analytics.
 	 *
