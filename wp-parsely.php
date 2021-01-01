@@ -1638,6 +1638,32 @@ class Parsely {
 	}
 
 	/**
+	 * Add amp analytics.
+	 *
+	 * @param type $analytics The analytics object you want to add.
+	 * @return type
+	 */
+	public function parsely_add_amp_analytics( $analytics ) {
+		$options = $this->get_options();
+
+		if ( empty( $options['apikey'] ) ) {
+			return $analytics;
+		}
+
+		$analytics['parsely'] = array(
+			'type'        => 'parsely',
+			'attributes'  => array(),
+			'config_data' => array(
+				'vars' => array(
+					'apikey' => $options['apikey'],
+				),
+			),
+		);
+
+		return $analytics;
+	}
+
+	/**
 	 * Add amp native analytics.
 	 *
 	 * @param type $analytics The analytics object you want to add.
