@@ -5,106 +5,17 @@
  * @package WordPress
  */
 
+namespace Parsely\Tests;
+
+use Parsely\Tests\TestCase as ParselyTestCase;
+
 /**
  * Sample test case.
  *
  * @category   Class
  * @package    SampleTest
  */
-class SampleTest extends WP_UnitTestCase {
-
-	/**
-	 * Create a sample post.
-	 *
-	 * @category   Function
-	 * @package    SampleTest
-	 * @param string $post_type You can pass in a post type.
-	 */
-	public function create_test_post_array( $post_type = 'post' ) {
-		$post_array = array(
-			'post_title'   => 'Sample Parsely Post',
-			'post_author'  => 1,
-			'post_content' => 'Some sample content just to have here',
-			'post_status'  => 'publish',
-			'post_type'    => $post_type,
-		);
-		return $post_array;
-	}
-
-	/**
-	 * Create a sample category.
-	 *
-	 * @category   Function
-	 * @package    SampleTest
-	 * @param string $name You can pass in a category name.
-	 */
-	public function create_test_category( $name ) {
-		$category = $this->factory->category->create(
-			array(
-				'name'                 => $name,
-				'category_description' => $name,
-				'category_nicename'    => 'category-' . $name,
-				'taxonomy'             => 'category',
-			)
-		);
-		return $category;
-	}
-
-	/**
-	 * Create a sample user
-	 *
-	 * @category   Function
-	 * @package    SampleTest
-	 * @param string $name You can pass in a user name.
-	 */
-	public function create_test_user( $name ) {
-		$user = $this->factory->user->create( array( 'user_login' => $name ) );
-		return $user;
-	}
-
-	/**
-	 * Create a test blog.
-	 *
-	 * @category   Function
-	 * @package    SampleTest
-	 * @param string $name You can pass in a user name.
-	 * @param string $user_id You can pass in a user id.
-	 */
-	public function create_test_blog( $name, $user_id ) {
-		$blog = $this->factory->blog->create(
-			array(
-				'domain'  => 'http://' . $name . 'com',
-				'user_id' => $user_id,
-			)
-		);
-		return $blog;
-	}
-
-	/**
-	 * Create a sample taxonomy.
-	 *
-	 * @category   Function
-	 * @package    SampleTest
-	 * @param string $taxonomy You can pass in a taxonomy.
-	 * @param string $taxonomy_value The name of the taxonomy.
-	 */
-	public function create_test_taxonomy( $taxonomy, $taxonomy_value ) {
-		register_taxonomy(
-			$taxonomy,
-			'post',
-			array(
-				'label'        => $taxonomy,
-				'hierarchical' => true,
-			)
-		);
-		$custom_taxonomy = $this->factory->term->create(
-			array(
-				'name'     => $taxonomy_value,
-				'taxonomy' => $taxonomy,
-			)
-		);
-		return $custom_taxonomy;
-	}
+class SampleTest extends ParselyTestCase {
 
 	/**
 	 * Internal variables
@@ -179,7 +90,7 @@ class SampleTest extends WP_UnitTestCase {
 	 */
 	public function setUp() {
 		parent::setUp();
-		self::$parsely   = new Parsely();
+		self::$parsely   = new \Parsely();
 		$option_defaults = array(
 			'apikey'                    => 'blog.parsely.com',
 			'content_id_prefix'         => '',
@@ -213,7 +124,7 @@ PARSELYJS;
 		echo esc_html( self::$parsely->insert_parsely_javascript() );
 		$output = ob_get_clean();
 		echo esc_html( $output );
-		$this->assertContains( self::$parsely_html, $output );
+		self::assertContains( self::$parsely_html, $output );
 	}
 
 
@@ -226,12 +137,12 @@ PARSELYJS;
 	public function test_parsely_ppage_output() {
 		$this->go_to( '/' );
 		$ppage = self::$parsely->insert_parsely_page();
-		$this->assertTrue( 'WebPage' === $ppage['@type'] );
+		self::assertSame( 'WebPage', $ppage['@type'] );
 		$post_array = $this->create_test_post_array();
 		$post       = $this->factory->post->create( $post_array );
 		$this->go_to( '/?p=' . $post );
 		$ppage = self::$parsely->insert_parsely_page();
-		$this->assertTrue( 'NewsArticle' === $ppage['@type'] );
+		self::assertSame( 'NewsArticle', $ppage['@type'] );
 	}
 
 	/**
@@ -247,7 +158,7 @@ PARSELYJS;
 		$post                        = $this->factory->post->create( $post_array );
 		$this->go_to( '/?p=' . $post );
 		$ppage = self::$parsely->insert_parsely_page();
-		$this->assertTrue( 'Newssss' === $ppage['articleSection'] );
+		self::assertSame( 'Newssss', $ppage['articleSection'] );
 	}
 
 	/**
@@ -265,8 +176,8 @@ PARSELYJS;
 		update_option( 'parsely', $options );
 		$this->go_to( '/?p=' . $post );
 		$ppage = self::$parsely->insert_parsely_page();
-		$this->assertContains( 'sample', $ppage['keywords'] );
-		$this->assertContains( 'tag', $ppage['keywords'] );
+		self::assertContains( 'sample', $ppage['keywords'] );
+		self::assertContains( 'tag', $ppage['keywords'] );
 	}
 
 	/**
@@ -294,9 +205,9 @@ PARSELYJS;
 		$post                        = $this->factory->post->create( $post_array );
 		$this->go_to( '/?p=' . $post );
 		$ppage = self::$parsely->insert_parsely_page();
-		$this->assertContains( 'news', $ppage['keywords'] );
-		$this->assertContains( 'local', $ppage['keywords'] );
-		$this->assertContains( 'sample county', $ppage['keywords'] );
+		self::assertContains( 'news', $ppage['keywords'] );
+		self::assertContains( 'local', $ppage['keywords'] );
+		self::assertContains( 'sample county', $ppage['keywords'] );
 	}
 
 	/**
@@ -323,9 +234,9 @@ PARSELYJS;
 		wp_set_post_terms( $post, array( $parent_taxonomy, $child_taxonomy ), 'sports' );
 		$this->go_to( '/?p=' . $post );
 		$ppage = self::$parsely->insert_parsely_page();
-		$this->assertContains( 'sample', $ppage['keywords'] );
-		$this->assertContains( 'tag', $ppage['keywords'] );
-		$this->assertContains( 'gretzky', $ppage['keywords'] );
+		self::assertContains( 'sample', $ppage['keywords'] );
+		self::assertContains( 'tag', $ppage['keywords'] );
+		self::assertContains( 'gretzky', $ppage['keywords'] );
 	}
 
 
@@ -353,7 +264,7 @@ PARSELYJS;
 		$post                        = $this->factory->post->create( $post_array );
 		$this->go_to( '/?p=' . $post );
 		$ppage = self::$parsely->insert_parsely_page();
-		$this->assertTrue( 'news' === $ppage['articleSection'] );
+		self::assertSame( 'news', $ppage['articleSection'] );
 	}
 
 	/**
@@ -381,7 +292,7 @@ PARSELYJS;
 		wp_set_post_terms( $post, array( $parent_taxonomy, $child_taxonomy ), 'sports' );
 		$this->go_to( '/?p=' . $post );
 		$ppage = self::$parsely->insert_parsely_page();
-		$this->assertTrue( 'lebron' === $ppage['articleSection'] );
+		self::assertSame( 'lebron', $ppage['articleSection'] );
 	}
 
 	/**
@@ -410,7 +321,7 @@ PARSELYJS;
 		wp_set_post_terms( $post, array( $parent_taxonomy, $child_taxonomy ), 'sports' );
 		$this->go_to( '/?p=' . $post );
 		$ppage = self::$parsely->insert_parsely_page();
-		$this->assertTrue( 'basketball' === $ppage['articleSection'] );
+		self::assertSame( 'basketball', $ppage['articleSection'] );
 	}
 
 	/**
@@ -425,12 +336,12 @@ PARSELYJS;
 		$post       = $this->factory->post->create( $post_array );
 		$this->go_to( '/?p=' . $post );
 		$ppage = self::$parsely->insert_parsely_page();
-		$this->assertTrue( strpos( $ppage['url'], 'http', 0 ) === 0 );
-		$this->assertFalse( strpos( $ppage['url'], 'https', 0 ) );
+		self::assertSame( strpos( $ppage['url'], 'http', 0 ), 0 );
+		self::assertFalse( strpos( $ppage['url'], 'https', 0 ) );
 		$options['force_https_canonicals'] = true;
 		update_option( 'parsely', $options );
 		$ppage = self::$parsely->insert_parsely_page();
-		$this->assertTrue( strpos( $ppage['url'], 'https', 0 ) === 0 );
+		self::assertSame( strpos( $ppage['url'], 'https', 0 ), 0 );
 	}
 
 	/**
@@ -442,8 +353,8 @@ PARSELYJS;
 	public function test_fbia_integration() {
 		$options = get_option( 'parsely' );
 		$output  = self::$parsely->insert_parsely_tracking_fbia( $registry );
-		$this->assertTrue( strpos( $output, 'facebook.com/instantarticles' ) > 0 );
-		$this->assertTrue( strpos( $output, 'blog.parsely.com' ) > 0 );
+		self::assertTrue( strpos( $output, 'facebook.com/instantarticles' ) > 0 );
+		self::assertTrue( strpos( $output, 'blog.parsely.com' ) > 0 );
 	}
 
 
@@ -458,13 +369,13 @@ PARSELYJS;
 		$analytics = array();
 		$filter    = self::$parsely->parsely_add_amp_actions();
 		$output    = self::$parsely->parsely_add_amp_analytics( $analytics );
-		$this->assertEmpty( $filter );
-		$this->assertTrue( 'parsely' === $output['parsely']['type'] );
-		$this->assertTrue( 'blog.parsely.com' === $output['parsely']['config_data']['vars']['apikey'] );
+		self::assertEmpty( $filter );
+		self::assertSame( 'parsely', $output['parsely']['type'] );
+		self::assertSame( 'blog.parsely.com', $output['parsely']['config_data']['vars']['apikey'] );
 		$options['disable_amp'] = true;
 		update_option( 'parsely', $options );
 		$filter = self::$parsely->parsely_add_amp_actions();
-		$this->assertTrue( '' === $filter );
+		self::assertSame( '', $filter );
 	}
 
 	/**
@@ -477,25 +388,23 @@ PARSELYJS;
 		$options    = get_option( 'parsely' );
 		$post_array = $this->create_test_post_array();
 		$post       = $this->factory->post->create( $post_array );
+		$headline   = 'Completely New And Original Filtered Headline';
 		$this->go_to( '/?p=' . $post );
-		/**
-		 * Check out page filtering.
-		 *
-		 * @category   Function
-		 * @package    SampleTest
-		 * @param string $original_ppage The original parsely page.
-		 * @param string $ppage_post The parsely post.
-		 * @param string $p_options Any options.
-		 */
-		function filter_ppage( $original_ppage, $ppage_post, $p_options ) {
-			$new_vals             = $original_ppage;
-			$new_vals['headline'] = 'Completely New And Original Filtered Headline';
-			return $new_vals;
-		}
+		
+		// Apply page filtering.
+		add_filter(
+			'after_set_parsely_page',
+			function( $args ) use ( $headline ) {
+				$args['headline'] = $headline;
 
-		add_filter( 'after_set_parsely_page', 'filter_ppage', 10, 3 );
+				return $args;
+			},
+			10,
+			3
+		);
+
 		$ppage = self::$parsely->insert_parsely_page();
-		$this->assertTrue( strpos( $ppage['headline'], 'Completely New And Original Filtered Headline' ) === 0 );
+		self::assertTrue( strpos( $ppage['headline'], $headline ) === 0 );
 	}
 
 	/**
@@ -513,7 +422,7 @@ PARSELYJS;
 		ob_start();
 		echo esc_html( self::$parsely->insert_parsely_javascript() );
 		$output = ob_get_clean();
-		$this->assertNotContains( self::$parsely_html, $output );
+		self::assertNotContains( self::$parsely_html, $output );
 	}
 
 	/**
@@ -524,7 +433,7 @@ PARSELYJS;
 	 */
 	public function test_user_logged_in_multisite() {
 		if ( ! is_multisite() ) {
-			$this->markTestSkipped( "this test can't run without multisite" );
+			self::markTestSkipped( "this test can't run without multisite" );
 		}
 
 		$new_user    = $this->create_test_user( 'optimus_prime' );
@@ -545,22 +454,22 @@ PARSELYJS;
 		$post       = $this->factory->post->create( $post_array );
 		$this->go_to( '/?p=' . $post );
 
-		$this->assertEquals( get_current_blog_id(), $first_blog );
-		$this->assertTrue( is_user_member_of_blog( $new_user, $first_blog ) );
-		$this->assertFalse( is_user_member_of_blog( $new_user, $second_blog ) );
+		self::assertEquals( get_current_blog_id(), $first_blog );
+		self::assertTrue( is_user_member_of_blog( $new_user, $first_blog ) );
+		self::assertFalse( is_user_member_of_blog( $new_user, $second_blog ) );
 
 		ob_start();
 		echo esc_html( self::$parsely->insert_parsely_javascript() );
 		$output = ob_get_clean();
-		$this->assertNotContains( self::$parsely_html, $output );
+		self::assertNotContains( self::$parsely_html, $output );
 
 		switch_to_blog( $second_blog );
-		$this->assertEquals( get_current_blog_id(), $second_blog );
-		$this->assertFalse( is_user_member_of_blog( $new_user, get_current_blog_id() ) );
+		self::assertEquals( get_current_blog_id(), $second_blog );
+		self::assertFalse( is_user_member_of_blog( $new_user, get_current_blog_id() ) );
 
 		ob_start();
 		echo esc_html( self::$parsely->insert_parsely_javascript() );
 		$output = ob_get_clean();
-		$this->assertContains( self::$parsely_html, $output );
+		self::assertContains( self::$parsely_html, $output );
 	}
 }
